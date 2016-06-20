@@ -1,0 +1,5 @@
+# vim: set ft=ruby:
+
+require 'rails_i18n_lint'
+
+RailsI18nLint.run
