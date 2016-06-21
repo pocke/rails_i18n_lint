@@ -16,16 +16,16 @@ module RailsI18nLint
     t = targets('./')
     t.each do |dir, files|
       yamls = files
-        .map{|f| YAML.load_file(f)}
-        .map{|x| x.map{|lang, value| [lang, value]}}
+        .map{|f| [YAML.load_file(f), f]}
+        .map{|x, path| x.map{|lang, value| [lang, value, path]}}
         .flatten(1)
       sum = hash_sum(yamls.map{|_, value|value})
 
-      yamls.each do |lang, value|
+      yamls.each do |lang, value, path|
         diff = HashDiff.diff(sum, value).select{|diff| diff[0] == '-'}
         next if diff.empty?
 
-        puts "> Detect not enough fields in #{dir} #{lang}"
+        puts "> Detect not enough fields in #{path}"
         diff.each do |d|
           puts d[1]
         end
